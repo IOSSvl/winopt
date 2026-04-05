@@ -410,7 +410,7 @@ $rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Form
 $rp.Controls.Add($rl)
 
 $tc = New-Object System.Windows.Forms.Panel
-$tc.Dock = "Fill"; $tc.BackColor = $col.bg; $tc.AutoScroll = $true
+$tc.Dock = "Fill"; $tc.BackColor = $col.bg; $tc.AutoScroll = $true $tc.AutoScrollPosition = New-Object System.Drawing.Point(0, 0)
 $tc.Padding = New-Object System.Windows.Forms.Padding(0, 10, 0, 8)
 $rl.Controls.Add($tc, 0, 0)
 
@@ -601,6 +601,7 @@ $btnRun.Add_Click({
 # ── Init
 $form.Add_Shown({
     Render-Tweaks "Tutte"
+    $tc.AutoScrollPosition = New-Object System.Drawing.Point(0, 0)
     Write-Log "WinOpt avviato — seleziona tweaks e premi Esegui." "info"
     Write-Log "Consiglio: crea prima un Restore Point." "warn"
   })
