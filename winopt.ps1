@@ -404,9 +404,9 @@ $main.Controls.Add($rp, 1, 0)
 
 $rl = New-Object System.Windows.Forms.TableLayoutPanel
 $rl.Dock = "Fill"; $rl.RowCount = 3; $rl.ColumnCount = 1; $rl.BackColor = $col.bg
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 42)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 70)))  | Out-Null
 $rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Absolute, 1)))  | Out-Null
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 42)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 30)))  | Out-Null
 $rp.Controls.Add($rl)
 
 $tc = New-Object System.Windows.Forms.Panel
@@ -599,8 +599,10 @@ $btnRun.Add_Click({
   })
 
 # ── Init
-Render-Tweaks "Tutte"
-Write-Log "WinOpt avviato — seleziona tweaks e premi Esegui." "info"
-Write-Log "Consiglio: crea prima un Restore Point." "warn"
+$form.Add_Shown({
+  Render-Tweaks "Tutte"
+  Write-Log "WinOpt avviato — seleziona tweaks e premi Esegui." "info"
+  Write-Log "Consiglio: crea prima un Restore Point." "warn"
+})
 
 [System.Windows.Forms.Application]::Run($form)
