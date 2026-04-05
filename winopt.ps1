@@ -404,9 +404,9 @@ $main.Controls.Add($rp, 1, 0)
 
 $rl = New-Object System.Windows.Forms.TableLayoutPanel
 $rl.Dock = "Fill"; $rl.RowCount = 3; $rl.ColumnCount = 1; $rl.BackColor = $col.bg
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 70)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 80)))  | Out-Null
 $rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Absolute, 1)))  | Out-Null
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 30)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 20)))  | Out-Null
 $rp.Controls.Add($rl)
 
 $tc = New-Object System.Windows.Forms.Panel
@@ -473,7 +473,7 @@ function Render-Tweaks([string]$cat) {
   $y = 2
   foreach ($t in $list) {
     $rc = RiskColor $t.risk
-    $w = $tc.ClientSize.Width - 4
+    $w = $tc.ClientSize.Width - 2
 
     $row = New-Object System.Windows.Forms.Panel
     $row.Size = New-Object System.Drawing.Size($w, 62); $row.Location = New-Object System.Drawing.Point(0, $y)
@@ -522,7 +522,7 @@ function Render-Tweaks([string]$cat) {
 }
 
 $tc.Add_Resize({
-    $w = $tc.ClientSize.Width - -4
+    $w = $tc.ClientSize.Width - 2
     foreach ($r in $tc.Controls) { if ($r -is [System.Windows.Forms.Panel]) { $r.Width = $w } }
   })
 
