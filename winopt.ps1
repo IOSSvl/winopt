@@ -11,21 +11,22 @@
 #region — Elevation
 # Gestisce sia esecuzione da file che via "irm | iex"
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
-    [Security.Principal.WindowsBuiltInRole]::Administrator)
+  [Security.Principal.WindowsBuiltInRole]::Administrator)
 
 if (-not $isAdmin) {
-    if ($PSCommandPath) {
-        # Eseguito da file: rilancia direttamente
-        Start-Process powershell -Verb RunAs `
-            -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
-    } else {
-        # Eseguito via iex: salva in temp e rilancia
-        $tmp = Join-Path $env:TEMP "winopt_run.ps1"
-        $MyInvocation.MyCommand.ScriptBlock.ToString() | Out-File $tmp -Encoding UTF8
-        Start-Process powershell -Verb RunAs `
-            -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$tmp`""
-    }
-    exit
+  if ($PSCommandPath) {
+    # Eseguito da file: rilancia direttamente
+    Start-Process powershell -Verb RunAs `
+      -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+  }
+  else {
+    # Eseguito via iex: salva in temp e rilancia
+    $tmp = Join-Path $env:TEMP "winopt_run.ps1"
+    $MyInvocation.MyCommand.ScriptBlock.ToString() | Out-File $tmp -Encoding UTF8
+    Start-Process powershell -Verb RunAs `
+      -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$tmp`""
+  }
+  exit
 }
 #endregion
 
@@ -229,44 +230,44 @@ $tweaks = $tweaksJson | ConvertFrom-Json
 
 #region — Colori e font
 $col = @{
-    bg        = [System.Drawing.Color]::FromArgb(13,13,13)
-    sidebar   = [System.Drawing.Color]::FromArgb(18,18,18)
-    panel     = [System.Drawing.Color]::FromArgb(22,22,22)
-    border    = [System.Drawing.Color]::FromArgb(35,35,35)
-    text      = [System.Drawing.Color]::FromArgb(210,210,210)
-    textDim   = [System.Drawing.Color]::FromArgb(90,90,90)
-    safe      = [System.Drawing.Color]::FromArgb(52,211,153)
-    caution   = [System.Drawing.Color]::FromArgb(251,191,36)
-    danger    = [System.Drawing.Color]::FromArgb(248,113,113)
-    accent    = [System.Drawing.Color]::FromArgb(232,255,71)
-    accentDim = [System.Drawing.Color]::FromArgb(50,56,14)
-    logBg     = [System.Drawing.Color]::FromArgb(10,10,10)
-    logGreen  = [System.Drawing.Color]::FromArgb(126,231,135)
-    logYellow = [System.Drawing.Color]::FromArgb(251,191,36)
-    logRed    = [System.Drawing.Color]::FromArgb(248,113,113)
-    logGray   = [System.Drawing.Color]::FromArgb(70,70,70)
-    btnBg     = [System.Drawing.Color]::FromArgb(28,28,28)
+  bg        = [System.Drawing.Color]::FromArgb(13, 13, 13)
+  sidebar   = [System.Drawing.Color]::FromArgb(18, 18, 18)
+  panel     = [System.Drawing.Color]::FromArgb(22, 22, 22)
+  border    = [System.Drawing.Color]::FromArgb(35, 35, 35)
+  text      = [System.Drawing.Color]::FromArgb(210, 210, 210)
+  textDim   = [System.Drawing.Color]::FromArgb(90, 90, 90)
+  safe      = [System.Drawing.Color]::FromArgb(52, 211, 153)
+  caution   = [System.Drawing.Color]::FromArgb(251, 191, 36)
+  danger    = [System.Drawing.Color]::FromArgb(248, 113, 113)
+  accent    = [System.Drawing.Color]::FromArgb(232, 255, 71)
+  accentDim = [System.Drawing.Color]::FromArgb(50, 56, 14)
+  logBg     = [System.Drawing.Color]::FromArgb(10, 10, 10)
+  logGreen  = [System.Drawing.Color]::FromArgb(126, 231, 135)
+  logYellow = [System.Drawing.Color]::FromArgb(251, 191, 36)
+  logRed    = [System.Drawing.Color]::FromArgb(248, 113, 113)
+  logGray   = [System.Drawing.Color]::FromArgb(70, 70, 70)
+  btnBg     = [System.Drawing.Color]::FromArgb(28, 28, 28)
 }
-function RiskColor($r) { switch($r){ "safe"{$col.safe} "caution"{$col.caution} "danger"{$col.danger} default{$col.textDim} } }
+function RiskColor($r) { switch ($r) { "safe" { $col.safe } "caution" { $col.caution } "danger" { $col.danger } default { $col.textDim } } }
 
-$fMono  = New-Object System.Drawing.Font("Consolas",9)
-$fMonoS = New-Object System.Drawing.Font("Consolas",8)
-$fBold  = New-Object System.Drawing.Font("Consolas",9,[System.Drawing.FontStyle]::Bold)
-$fTitle = New-Object System.Drawing.Font("Consolas",13,[System.Drawing.FontStyle]::Bold)
-$fSm    = New-Object System.Drawing.Font("Consolas",7.5)
+$fMono = New-Object System.Drawing.Font("Consolas", 9)
+$fMonoS = New-Object System.Drawing.Font("Consolas", 8)
+$fBold = New-Object System.Drawing.Font("Consolas", 9, [System.Drawing.FontStyle]::Bold)
+$fTitle = New-Object System.Drawing.Font("Consolas", 13, [System.Drawing.FontStyle]::Bold)
+$fSm = New-Object System.Drawing.Font("Consolas", 7.5)
 #endregion
 
 # ============================================================
 #  FORM
 # ============================================================
 $form = New-Object System.Windows.Forms.Form
-$form.Text            = "WinOpt — Windows Optimizer"
-$form.Size            = New-Object System.Drawing.Size(980,700)
-$form.MinimumSize     = New-Object System.Drawing.Size(860,580)
-$form.StartPosition   = "CenterScreen"
-$form.BackColor       = $col.bg
-$form.ForeColor       = $col.text
-$form.Font            = $fMono
+$form.Text = "WinOpt — Windows Optimizer"
+$form.Size = New-Object System.Drawing.Size(980, 700)
+$form.MinimumSize = New-Object System.Drawing.Size(860, 580)
+$form.StartPosition = "CenterScreen"
+$form.BackColor = $col.bg
+$form.ForeColor = $col.text
+$form.Font = $fMono
 $form.FormBorderStyle = "Sizable"
 
 #region — Header
@@ -276,18 +277,18 @@ $form.Controls.Add($hdr)
 
 $lTitle = New-Object System.Windows.Forms.Label
 $lTitle.Text = "WinOpt"; $lTitle.Font = $fTitle; $lTitle.ForeColor = $col.accent
-$lTitle.AutoSize = $true; $lTitle.Location = New-Object System.Drawing.Point(18,14)
+$lTitle.AutoSize = $true; $lTitle.Location = New-Object System.Drawing.Point(18, 14)
 $hdr.Controls.Add($lTitle)
 
 $lSub = New-Object System.Windows.Forms.Label
 $lSub.Text = "Windows 11 Optimization Tool"; $lSub.Font = $fSm; $lSub.ForeColor = $col.textDim
-$lSub.AutoSize = $true; $lSub.Location = New-Object System.Drawing.Point(98,20)
+$lSub.AutoSize = $true; $lSub.Location = New-Object System.Drawing.Point(98, 20)
 $hdr.Controls.Add($lSub)
 
 $lAdmin = New-Object System.Windows.Forms.Label
 $lAdmin.Text = "▲ ADMIN"; $lAdmin.Font = $fSm; $lAdmin.ForeColor = $col.safe; $lAdmin.AutoSize = $true
 $hdr.Controls.Add($lAdmin)
-$hdr.Add_Resize({ $lAdmin.Location = New-Object System.Drawing.Point(($hdr.Width - $lAdmin.Width - 18),20) })
+$hdr.Add_Resize({ $lAdmin.Location = New-Object System.Drawing.Point(($hdr.Width - $lAdmin.Width - 18), 20) })
 
 $sepH = New-Object System.Windows.Forms.Panel
 $sepH.Dock = "Top"; $sepH.Height = 1; $sepH.BackColor = $col.border
@@ -301,14 +302,14 @@ $form.Controls.Add($runBar)
 
 $btnRun = New-Object System.Windows.Forms.Button
 $btnRun.Text = "▶  ESEGUI SELEZIONATI"; $btnRun.Font = $fBold
-$btnRun.Size = New-Object System.Drawing.Size(224,34); $btnRun.Location = New-Object System.Drawing.Point(14,11)
+$btnRun.Size = New-Object System.Drawing.Size(224, 34); $btnRun.Location = New-Object System.Drawing.Point(14, 11)
 $btnRun.FlatStyle = "Flat"; $btnRun.BackColor = $col.accentDim; $btnRun.ForeColor = $col.accent
 $btnRun.FlatAppearance.BorderColor = $col.accent; $btnRun.Cursor = [System.Windows.Forms.Cursors]::Hand
 $runBar.Controls.Add($btnRun)
 
 $btnRP = New-Object System.Windows.Forms.Button
 $btnRP.Text = "🛡  Restore Point"; $btnRP.Font = $fMonoS
-$btnRP.Size = New-Object System.Drawing.Size(148,34); $btnRP.Location = New-Object System.Drawing.Point(248,11)
+$btnRP.Size = New-Object System.Drawing.Size(148, 34); $btnRP.Location = New-Object System.Drawing.Point(248, 11)
 $btnRP.FlatStyle = "Flat"; $btnRP.BackColor = $col.btnBg; $btnRP.ForeColor = $col.textDim
 $btnRP.FlatAppearance.BorderColor = $col.border
 $runBar.Controls.Add($btnRP)
@@ -316,7 +317,7 @@ $runBar.Controls.Add($btnRP)
 $lHint = New-Object System.Windows.Forms.Label
 $lHint.Text = "Crea sempre un Restore Point prima di eseguire."; $lHint.Font = $fSm
 $lHint.ForeColor = $col.textDim; $lHint.AutoSize = $true
-$lHint.Location = New-Object System.Drawing.Point(410,20)
+$lHint.Location = New-Object System.Drawing.Point(410, 20)
 $runBar.Controls.Add($lHint)
 
 $sepBot = New-Object System.Windows.Forms.Panel
@@ -327,69 +328,70 @@ $form.Controls.Add($sepBot)
 #region — Layout principale
 $main = New-Object System.Windows.Forms.TableLayoutPanel
 $main.Dock = "Fill"; $main.ColumnCount = 2; $main.RowCount = 1; $main.BackColor = $col.bg
-$main.ColumnStyles.Add((New-Object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Absolute,300))) | Out-Null
-$main.ColumnStyles.Add((New-Object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent,100))) | Out-Null
+$main.ColumnStyles.Add((New-Object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Absolute, 300))) | Out-Null
+$main.ColumnStyles.Add((New-Object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 100))) | Out-Null
 $form.Controls.Add($main)
 #endregion
 
 #region — Sidebar
 $sb = New-Object System.Windows.Forms.Panel
 $sb.Dock = "Fill"; $sb.BackColor = $col.sidebar
-$main.Controls.Add($sb,0,0)
+$main.Controls.Add($sb, 0, 0)
 
 $sepV = New-Object System.Windows.Forms.Panel
 $sepV.Dock = "Right"; $sepV.Width = 1; $sepV.BackColor = $col.border
 $sb.Controls.Add($sepV)
 
 $categories = @("Tutte") + ($tweaks | Select-Object -ExpandProperty category -Unique | Sort-Object)
-$catBtns    = @{}
+$catBtns = @{}
 
 $lCatHdr = New-Object System.Windows.Forms.Label
 $lCatHdr.Text = "CATEGORIA"; $lCatHdr.Font = $fSm; $lCatHdr.ForeColor = $col.textDim
-$lCatHdr.AutoSize = $false; $lCatHdr.Size = New-Object System.Drawing.Size(278,18)
-$lCatHdr.Location = New-Object System.Drawing.Point(14,14)
+$lCatHdr.AutoSize = $false; $lCatHdr.Size = New-Object System.Drawing.Size(278, 18)
+$lCatHdr.Location = New-Object System.Drawing.Point(14, 14)
 $sb.Controls.Add($lCatHdr)
 
 $cy = 36
 foreach ($cat in $categories) {
-    $b = New-Object System.Windows.Forms.Button
-    $b.Text = $cat; $b.Font = $fMonoS; $b.Tag = $cat
-    $b.Size = New-Object System.Drawing.Size(268,26); $b.Location = New-Object System.Drawing.Point(10,$cy)
-    $b.FlatStyle = "Flat"; $b.FlatAppearance.BorderSize = 1
-    if ($cat -eq "Tutte") {
-        $b.BackColor = $col.accentDim; $b.ForeColor = $col.accent
-        $b.FlatAppearance.BorderColor = $col.accent
-    } else {
-        $b.BackColor = $col.sidebar; $b.ForeColor = $col.textDim
-        $b.FlatAppearance.BorderColor = $col.border
-    }
-    $catBtns[$cat] = $b; $sb.Controls.Add($b); $cy += 30
+  $b = New-Object System.Windows.Forms.Button
+  $b.Text = $cat; $b.Font = $fMonoS; $b.Tag = $cat
+  $b.Size = New-Object System.Drawing.Size(268, 26); $b.Location = New-Object System.Drawing.Point(10, $cy)
+  $b.FlatStyle = "Flat"; $b.FlatAppearance.BorderSize = 1
+  if ($cat -eq "Tutte") {
+    $b.BackColor = $col.accentDim; $b.ForeColor = $col.accent
+    $b.FlatAppearance.BorderColor = $col.accent
+  }
+  else {
+    $b.BackColor = $col.sidebar; $b.ForeColor = $col.textDim
+    $b.FlatAppearance.BorderColor = $col.border
+  }
+  $catBtns[$cat] = $b; $sb.Controls.Add($b); $cy += 30
 }
 
 $ly = $cy + 16
-foreach ($item in @(@{l="● SAFE";c=$col.safe},@{l="● ATTENZIONE";c=$col.caution},@{l="● DANGER";c=$col.danger})) {
-    $l = New-Object System.Windows.Forms.Label
-    $l.Text = $item.l; $l.Font = $fSm; $l.ForeColor = $item.c
-    $l.AutoSize = $true; $l.Location = New-Object System.Drawing.Point(14,$ly)
-    $sb.Controls.Add($l); $ly += 18
+foreach ($item in @(@{l = "● SAFE"; c = $col.safe }, @{l = "● ATTENZIONE"; c = $col.caution }, @{l = "● DANGER"; c = $col.danger })) {
+  $l = New-Object System.Windows.Forms.Label
+  $l.Text = $item.l; $l.Font = $fSm; $l.ForeColor = $item.c
+  $l.AutoSize = $true; $l.Location = New-Object System.Drawing.Point(14, $ly)
+  $sb.Controls.Add($l); $ly += 18
 }
 
 $lCount = New-Object System.Windows.Forms.Label
 $lCount.Text = "0 selezionati"; $lCount.Font = $fSm; $lCount.ForeColor = $col.textDim
-$lCount.AutoSize = $false; $lCount.Size = New-Object System.Drawing.Size(268,16)
-$lCount.Location = New-Object System.Drawing.Point(14,($ly+12))
+$lCount.AutoSize = $false; $lCount.Size = New-Object System.Drawing.Size(268, 16)
+$lCount.Location = New-Object System.Drawing.Point(14, ($ly + 12))
 $sb.Controls.Add($lCount)
 
 $btnAll = New-Object System.Windows.Forms.Button
 $btnAll.Text = "Seleziona tutti"; $btnAll.Font = $fSm
-$btnAll.Size = New-Object System.Drawing.Size(128,24); $btnAll.Location = New-Object System.Drawing.Point(10,($ly+32))
+$btnAll.Size = New-Object System.Drawing.Size(128, 24); $btnAll.Location = New-Object System.Drawing.Point(10, ($ly + 32))
 $btnAll.FlatStyle = "Flat"; $btnAll.BackColor = $col.btnBg; $btnAll.ForeColor = $col.textDim
 $btnAll.FlatAppearance.BorderColor = $col.border
 $sb.Controls.Add($btnAll)
 
 $btnNone = New-Object System.Windows.Forms.Button
 $btnNone.Text = "Deseleziona tutti"; $btnNone.Font = $fSm
-$btnNone.Size = New-Object System.Drawing.Size(136,24); $btnNone.Location = New-Object System.Drawing.Point(142,($ly+32))
+$btnNone.Size = New-Object System.Drawing.Size(136, 24); $btnNone.Location = New-Object System.Drawing.Point(142, ($ly + 32))
 $btnNone.FlatStyle = "Flat"; $btnNone.BackColor = $col.btnBg; $btnNone.ForeColor = $col.textDim
 $btnNone.FlatAppearance.BorderColor = $col.border
 $sb.Controls.Add($btnNone)
@@ -398,27 +400,27 @@ $sb.Controls.Add($btnNone)
 #region — Right panel
 $rp = New-Object System.Windows.Forms.Panel
 $rp.Dock = "Fill"; $rp.BackColor = $col.bg
-$main.Controls.Add($rp,1,0)
+$main.Controls.Add($rp, 1, 0)
 
 $rl = New-Object System.Windows.Forms.TableLayoutPanel
 $rl.Dock = "Fill"; $rl.RowCount = 3; $rl.ColumnCount = 1; $rl.BackColor = $col.bg
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent,58)))  | Out-Null
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Absolute,1)))  | Out-Null
-$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent,42)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 42)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Absolute, 1)))  | Out-Null
+$rl.RowStyles.Add((New-Object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 42)))  | Out-Null
 $rp.Controls.Add($rl)
 
 $tc = New-Object System.Windows.Forms.Panel
 $tc.Dock = "Fill"; $tc.BackColor = $col.bg; $tc.AutoScroll = $true
-$tc.Padding = New-Object System.Windows.Forms.Padding(12,8,12,8)
-$rl.Controls.Add($tc,0,0)
+$tc.Padding = New-Object System.Windows.Forms.Padding(0, 8, 0, 8)
+$rl.Controls.Add($tc, 0, 0)
 
 $sepMid = New-Object System.Windows.Forms.Panel
 $sepMid.Dock = "Fill"; $sepMid.BackColor = $col.border
-$rl.Controls.Add($sepMid,0,1)
+$rl.Controls.Add($sepMid, 0, 1)
 
 $logP = New-Object System.Windows.Forms.Panel
 $logP.Dock = "Fill"; $logP.BackColor = $col.logBg
-$rl.Controls.Add($logP,0,2)
+$rl.Controls.Add($logP, 0, 2)
 
 $logHdr = New-Object System.Windows.Forms.Panel
 $logHdr.Dock = "Top"; $logHdr.Height = 30; $logHdr.BackColor = $col.sidebar
@@ -426,16 +428,16 @@ $logP.Controls.Add($logHdr)
 
 $lLog = New-Object System.Windows.Forms.Label
 $lLog.Text = "OUTPUT LOG"; $lLog.Font = $fSm; $lLog.ForeColor = $col.textDim
-$lLog.AutoSize = $true; $lLog.Location = New-Object System.Drawing.Point(14,8)
+$lLog.AutoSize = $true; $lLog.Location = New-Object System.Drawing.Point(14, 8)
 $logHdr.Controls.Add($lLog)
 
 $btnClr = New-Object System.Windows.Forms.Button
 $btnClr.Text = "Pulisci"; $btnClr.Font = $fSm
-$btnClr.Size = New-Object System.Drawing.Size(58,20); $btnClr.FlatStyle = "Flat"
+$btnClr.Size = New-Object System.Drawing.Size(58, 20); $btnClr.FlatStyle = "Flat"
 $btnClr.BackColor = $col.btnBg; $btnClr.ForeColor = $col.textDim
 $btnClr.FlatAppearance.BorderColor = $col.border
 $logHdr.Controls.Add($btnClr)
-$logHdr.Add_Resize({ $btnClr.Location = New-Object System.Drawing.Point(($logHdr.Width - 72),5) })
+$logHdr.Add_Resize({ $btnClr.Location = New-Object System.Drawing.Point(($logHdr.Width - 72), 5) })
 
 $logBox = New-Object System.Windows.Forms.RichTextBox
 $logBox.Dock = "Fill"; $logBox.BackColor = $col.logBg; $logBox.ForeColor = $col.text
@@ -450,83 +452,83 @@ $logP.Controls.Add($logBox)
 $cbMap = @{}
 
 function Write-Log {
-    param([string]$msg, [string]$type = "info")
-    $ts = Get-Date -Format "HH:mm:ss"
-    $clr = switch($type){ "ok"{$col.logGreen} "warn"{$col.logYellow} "error"{$col.logRed} "skip"{$col.logGray} default{$col.text} }
-    $logBox.SelectionStart = $logBox.TextLength; $logBox.SelectionLength = 0
-    $logBox.SelectionColor = $col.logGray;  $logBox.AppendText("[$ts] ")
-    $logBox.SelectionColor = $clr;          $logBox.AppendText("$msg`n")
-    $logBox.ScrollToCaret()
+  param([string]$msg, [string]$type = "info")
+  $ts = Get-Date -Format "HH:mm:ss"
+  $clr = switch ($type) { "ok" { $col.logGreen } "warn" { $col.logYellow } "error" { $col.logRed } "skip" { $col.logGray } default { $col.text } }
+  $logBox.SelectionStart = $logBox.TextLength; $logBox.SelectionLength = 0
+  $logBox.SelectionColor = $col.logGray; $logBox.AppendText("[$ts] ")
+  $logBox.SelectionColor = $clr; $logBox.AppendText("$msg`n")
+  $logBox.ScrollToCaret()
 }
 
 function Update-Counter {
-    $n = ($cbMap.Keys | Where-Object { $cbMap[$_].Checked }).Count
-    $lCount.Text      = "$n selezionati"
-    $lCount.ForeColor = if ($n -gt 0){ $col.accent } else { $col.textDim }
+  $n = ($cbMap.Keys | Where-Object { $cbMap[$_].Checked }).Count
+  $lCount.Text = "$n selezionati"
+  $lCount.ForeColor = if ($n -gt 0) { $col.accent } else { $col.textDim }
 }
 
 function Render-Tweaks([string]$cat) {
-    $tc.Controls.Clear(); $cbMap.Clear()
-    $list = if ($cat -eq "Tutte"){ $tweaks } else { $tweaks | Where-Object { $_.category -eq $cat } }
-    $y = 2
-    foreach ($t in $list) {
-        $rc = RiskColor $t.risk
-        $w  = $tc.ClientSize.Width - 24
+  $tc.Controls.Clear(); $cbMap.Clear()
+  $list = if ($cat -eq "Tutte") { $tweaks } else { $tweaks | Where-Object { $_.category -eq $cat } }
+  $y = 2
+  foreach ($t in $list) {
+    $rc = RiskColor $t.risk
+    $w = $tc.ClientSize.Width - 4
 
-        $row = New-Object System.Windows.Forms.Panel
-        $row.Size = New-Object System.Drawing.Size($w,62); $row.Location = New-Object System.Drawing.Point(0,$y)
-        $row.BackColor = $col.panel; $row.Cursor = [System.Windows.Forms.Cursors]::Hand; $row.Tag = $t.id
+    $row = New-Object System.Windows.Forms.Panel
+    $row.Size = New-Object System.Drawing.Size($w, 62); $row.Location = New-Object System.Drawing.Point(0, $y)
+    $row.BackColor = $col.panel; $row.Cursor = [System.Windows.Forms.Cursors]::Hand; $row.Tag = $t.id
 
-        $bar = New-Object System.Windows.Forms.Panel
-        $bar.BackColor = $rc; $bar.Size = New-Object System.Drawing.Size(3,62); $bar.Location = New-Object System.Drawing.Point(0,0)
-        $row.Controls.Add($bar)
+    $bar = New-Object System.Windows.Forms.Panel
+    $bar.BackColor = $rc; $bar.Size = New-Object System.Drawing.Size(3, 62); $bar.Location = New-Object System.Drawing.Point(0, 0)
+    $row.Controls.Add($bar)
 
-        $cb = New-Object System.Windows.Forms.CheckBox
-        $cb.Size = New-Object System.Drawing.Size(18,18); $cb.Location = New-Object System.Drawing.Point(14,22)
-        $cb.BackColor = $col.panel; $cb.Tag = $t.id
-        $cb.Add_CheckedChanged({ Update-Counter })
-        $row.Controls.Add($cb); $cbMap[$t.id] = $cb
+    $cb = New-Object System.Windows.Forms.CheckBox
+    $cb.Size = New-Object System.Drawing.Size(18, 18); $cb.Location = New-Object System.Drawing.Point(14, 22)
+    $cb.BackColor = $col.panel; $cb.Tag = $t.id
+    $cb.Add_CheckedChanged({ Update-Counter })
+    $row.Controls.Add($cb); $cbMap[$t.id] = $cb
 
-        $lT = New-Object System.Windows.Forms.Label
-        $lT.Text = $t.label; $lT.Font = $fBold; $lT.ForeColor = $col.text
-        $lT.AutoSize = $false; $lT.Size = New-Object System.Drawing.Size(($w-160),17)
-        $lT.Location = New-Object System.Drawing.Point(38,9); $row.Controls.Add($lT)
+    $lT = New-Object System.Windows.Forms.Label
+    $lT.Text = $t.label; $lT.Font = $fBold; $lT.ForeColor = $col.text
+    $lT.AutoSize = $false; $lT.Size = New-Object System.Drawing.Size(($w - 160), 17)
+    $lT.Location = New-Object System.Drawing.Point(38, 9); $row.Controls.Add($lT)
 
-        $lR = New-Object System.Windows.Forms.Label
-        $lR.Text = $t.risk.ToUpper(); $lR.Font = $fSm; $lR.ForeColor = $rc
-        $lR.AutoSize = $true; $lR.Location = New-Object System.Drawing.Point(38,29); $row.Controls.Add($lR)
+    $lR = New-Object System.Windows.Forms.Label
+    $lR.Text = $t.risk.ToUpper(); $lR.Font = $fSm; $lR.ForeColor = $rc
+    $lR.AutoSize = $true; $lR.Location = New-Object System.Drawing.Point(38, 29); $row.Controls.Add($lR)
 
-        $lC = New-Object System.Windows.Forms.Label
-        $lC.Text = "[$($t.category)]"; $lC.Font = $fSm; $lC.ForeColor = $col.textDim
-        $lC.AutoSize = $true; $lC.Location = New-Object System.Drawing.Point(96,29); $row.Controls.Add($lC)
+    $lC = New-Object System.Windows.Forms.Label
+    $lC.Text = "[$($t.category)]"; $lC.Font = $fSm; $lC.ForeColor = $col.textDim
+    $lC.AutoSize = $true; $lC.Location = New-Object System.Drawing.Point(96, 29); $row.Controls.Add($lC)
 
-        $lD = New-Object System.Windows.Forms.Label
-        $lD.Text = $t.description; $lD.Font = $fSm; $lD.ForeColor = $col.textDim
-        $lD.AutoSize = $false; $lD.Size = New-Object System.Drawing.Size(($w-48),15)
-        $lD.Location = New-Object System.Drawing.Point(38,46); $row.Controls.Add($lD)
+    $lD = New-Object System.Windows.Forms.Label
+    $lD.Text = $t.description; $lD.Font = $fSm; $lD.ForeColor = $col.textDim
+    $lD.AutoSize = $false; $lD.Size = New-Object System.Drawing.Size(($w - 48), 15)
+    $lD.Location = New-Object System.Drawing.Point(38, 46); $row.Controls.Add($lD)
 
-        # Click toggle con closure corretta
-        $tid = $t.id
-        $clk = [scriptblock]::Create("if(`$script:cbMap.ContainsKey('$tid')){`$script:cbMap['$tid'].Checked = -not `$script:cbMap['$tid'].Checked}")
-        $row.Add_Click($clk)
-        foreach ($ch in $row.Controls) { if ($ch -isnot [System.Windows.Forms.CheckBox]){ $ch.Add_Click($clk) } }
+    # Click toggle con closure corretta
+    $tid = $t.id
+    $clk = [scriptblock]::Create("if(`$script:cbMap.ContainsKey('$tid')){`$script:cbMap['$tid'].Checked = -not `$script:cbMap['$tid'].Checked}")
+    $row.Add_Click($clk)
+    foreach ($ch in $row.Controls) { if ($ch -isnot [System.Windows.Forms.CheckBox]) { $ch.Add_Click($clk) } }
 
-        $row.Add_MouseEnter({ param($s,$e) $s.BackColor = [System.Drawing.Color]::FromArgb(30,30,30) })
-        $row.Add_MouseLeave({ param($s,$e) $s.BackColor = [System.Drawing.Color]::FromArgb(22,22,22) })
+    $row.Add_MouseEnter({ param($s, $e) $s.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30) })
+    $row.Add_MouseLeave({ param($s, $e) $s.BackColor = [System.Drawing.Color]::FromArgb(22, 22, 22) })
 
-        $tc.Controls.Add($row); $y += 66
-    }
-    Update-Counter
+    $tc.Controls.Add($row); $y += 66
+  }
+  Update-Counter
 }
 
 $tc.Add_Resize({
-    $w = $tc.ClientSize.Width - 24
-    foreach ($r in $tc.Controls) { if ($r -is [System.Windows.Forms.Panel]){ $r.Width = $w } }
-})
+    $w = $tc.ClientSize.Width - -4
+    foreach ($r in $tc.Controls) { if ($r -is [System.Windows.Forms.Panel]) { $r.Width = $w } }
+  })
 
 # Category click
 foreach ($cat in $categories) {
-    $catSB = [scriptblock]::Create("
+  $catSB = [scriptblock]::Create("
         param(`$s,`$e)
         `$clicked = `$s.Tag
         foreach(`$c in @('" + ($categories -join "','") + "')){
@@ -539,34 +541,35 @@ foreach ($cat in $categories) {
         `$script:catBtns[`$clicked].FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(232,255,71)
         Render-Tweaks `$clicked
     ")
-    $catBtns[$cat].Add_Click($catSB)
+  $catBtns[$cat].Add_Click($catSB)
 }
 
-$btnAll.Add_Click({ foreach($k in $cbMap.Keys){ $cbMap[$k].Checked = $true }; Update-Counter })
-$btnNone.Add_Click({ foreach($k in $cbMap.Keys){ $cbMap[$k].Checked = $false }; Update-Counter })
+$btnAll.Add_Click({ foreach ($k in $cbMap.Keys) { $cbMap[$k].Checked = $true }; Update-Counter })
+$btnNone.Add_Click({ foreach ($k in $cbMap.Keys) { $cbMap[$k].Checked = $false }; Update-Counter })
 $btnClr.Add_Click({ $logBox.Clear() })
 
 $btnRP.Add_Click({
     Write-Log "Creazione Restore Point..." "info"; $btnRP.Enabled = $false
     try {
-        Enable-ComputerRestore -Drive "C:\" -EA SilentlyContinue
-        Checkpoint-Computer -Description "WinOpt $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -RestorePointType MODIFY_SETTINGS -EA Stop
-        Write-Log "Restore Point creato." "ok"
-    } catch { Write-Log "Errore: $($_.Exception.Message)" "error" }
+      Enable-ComputerRestore -Drive "C:\" -EA SilentlyContinue
+      Checkpoint-Computer -Description "WinOpt $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -RestorePointType MODIFY_SETTINGS -EA Stop
+      Write-Log "Restore Point creato." "ok"
+    }
+    catch { Write-Log "Errore: $($_.Exception.Message)" "error" }
     $btnRP.Enabled = $true
-})
+  })
 
 $btnRun.Add_Click({
     $sel = $tweaks | Where-Object { $cbMap.ContainsKey($_.id) -and $cbMap[$_.id].Checked }
-    if (-not $sel){ Write-Log "Nessun tweak selezionato." "warn"; return }
+    if (-not $sel) { Write-Log "Nessun tweak selezionato." "warn"; return }
 
     $danger = @($sel | Where-Object { $_.risk -eq "danger" })
     if ($danger.Count -gt 0) {
-        $names = ($danger | ForEach-Object { "  - $($_.label)" }) -join "`n"
-        $ok = [System.Windows.Forms.MessageBox]::Show(
-            "Tweaks DANGER selezionati:`n`n$names`n`nSei sicuro?",
-            "WinOpt — Conferma DANGER","YesNo","Warning")
-        if ($ok -ne "Yes"){ Write-Log "Annullato." "skip"; return }
+      $names = ($danger | ForEach-Object { "  - $($_.label)" }) -join "`n"
+      $ok = [System.Windows.Forms.MessageBox]::Show(
+        "Tweaks DANGER selezionati:`n`n$names`n`nSei sicuro?",
+        "WinOpt — Conferma DANGER", "YesNo", "Warning")
+      if ($ok -ne "Yes") { Write-Log "Annullato." "skip"; return }
     }
 
     $btnRun.Enabled = $false; $btnRun.Text = "⏳  ESECUZIONE..."
@@ -574,25 +577,26 @@ $btnRun.Add_Click({
 
     Write-Log "── Inizio: $total tweaks ──" "info"
     foreach ($t in $sel) {
-        Write-Log "Running: $($t.label)..." "info"
-        try {
-            Invoke-Expression $t.script 2>&1 | Out-Null
-            Write-Log "[OK] $($t.label)" "ok"; $nOk++
-        } catch {
-            Write-Log "[ERRORE] $($t.label): $($_.Exception.Message)" "error"; $nErr++
-        }
-        Start-Sleep -Milliseconds 100
+      Write-Log "Running: $($t.label)..." "info"
+      try {
+        Invoke-Expression $t.script 2>&1 | Out-Null
+        Write-Log "[OK] $($t.label)" "ok"; $nOk++
+      }
+      catch {
+        Write-Log "[ERRORE] $($t.label): $($_.Exception.Message)" "error"; $nErr++
+      }
+      Start-Sleep -Milliseconds 100
     }
-    Write-Log "── Fine: $nOk OK | $nErr errori | $total totale ──" $(if($nErr -gt 0){"warn"}else{"ok"})
+    Write-Log "── Fine: $nOk OK | $nErr errori | $total totale ──" $(if ($nErr -gt 0) { "warn" }else { "ok" })
 
     if ($nOk -gt 0) {
-        $r = [System.Windows.Forms.MessageBox]::Show(
-            "$nOk tweak applicati.`n`nRiavviare ora per applicare tutte le modifiche?",
-            "WinOpt — Completato","YesNo","Information")
-        if ($r -eq "Yes"){ Restart-Computer -Force }
+      $r = [System.Windows.Forms.MessageBox]::Show(
+        "$nOk tweak applicati.`n`nRiavviare ora per applicare tutte le modifiche?",
+        "WinOpt — Completato", "YesNo", "Information")
+      if ($r -eq "Yes") { Restart-Computer -Force }
     }
     $btnRun.Enabled = $true; $btnRun.Text = "▶  ESEGUI SELEZIONATI"
-})
+  })
 
 # ── Init
 Render-Tweaks "Tutte"
