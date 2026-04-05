@@ -411,7 +411,7 @@ $rp.Controls.Add($rl)
 
 $tc = New-Object System.Windows.Forms.Panel
 $tc.Dock = "Fill"; $tc.BackColor = $col.bg; $tc.AutoScroll = $true
-$tc.Padding = New-Object System.Windows.Forms.Padding(0, 8, 0, 8)
+$tc.Padding = New-Object System.Windows.Forms.Padding(0, 10, 0, 8)
 $rl.Controls.Add($tc, 0, 0)
 
 $sepMid = New-Object System.Windows.Forms.Panel
@@ -470,7 +470,7 @@ function Update-Counter {
 function Render-Tweaks([string]$cat) {
   $tc.Controls.Clear(); $cbMap.Clear()
   $list = if ($cat -eq "Tutte") { $tweaks } else { $tweaks | Where-Object { $_.category -eq $cat } }
-  $y = 8
+  $y = 10
   foreach ($t in $list) {
     $rc = RiskColor $t.risk
     $w = $tc.ClientSize.Width - 2
