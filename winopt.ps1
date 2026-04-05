@@ -262,7 +262,7 @@ $fSm = New-Object System.Drawing.Font("Consolas", 7.5)
 # ============================================================
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "WinOpt — Windows Optimizer"
-$form.Size = New-Object System.Drawing.Size(980, 700)
+$form.Size = New-Object System.Drawing.Size(1100, 800)
 $form.MinimumSize = New-Object System.Drawing.Size(860, 580)
 $form.StartPosition = "CenterScreen"
 $form.BackColor = $col.bg
@@ -600,9 +600,9 @@ $btnRun.Add_Click({
 
 # ── Init
 $form.Add_Shown({
-  Render-Tweaks "Tutte"
-  Write-Log "WinOpt avviato — seleziona tweaks e premi Esegui." "info"
-  Write-Log "Consiglio: crea prima un Restore Point." "warn"
-})
+    Render-Tweaks "Tutte"
+    Write-Log "WinOpt avviato — seleziona tweaks e premi Esegui." "info"
+    Write-Log "Consiglio: crea prima un Restore Point." "warn"
+  })
 
 [System.Windows.Forms.Application]::Run($form)
