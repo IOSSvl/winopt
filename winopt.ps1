@@ -470,7 +470,7 @@ function Update-Counter {
 function Render-Tweaks([string]$cat) {
   $tc.Controls.Clear(); $cbMap.Clear()
   $list = if ($cat -eq "Tutte") { $tweaks } else { $tweaks | Where-Object { $_.category -eq $cat } }
-  $y = 2
+  $y = 8
   foreach ($t in $list) {
     $rc = RiskColor $t.risk
     $w = $tc.ClientSize.Width - 2
